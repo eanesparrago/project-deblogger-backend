@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const passport = require("passport");
 const User = mongoose.model("User");
 
 exports.create = (req, res, next) => {
@@ -18,6 +19,19 @@ exports.create = (req, res, next) => {
     .catch(next);
 };
 
+// /user/login
 exports.logIn = (req, res, next) => {
-  
-}
+  passport.authenticate("local", { session: false }, (err, user, info) => {
+    if (err) {
+      return next(err);
+    }
+
+    if (user) {
+      user.token = user.generateJwt();
+      
+      return res.json({ user: user.toAuthJson() });
+    } else {
+      return res.status(422).json(info);
+    }
+  })(req, res, next);
+};

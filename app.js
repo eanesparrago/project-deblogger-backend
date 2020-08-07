@@ -50,6 +50,9 @@ if (isProduction) {
 // Models
 require("./models/User");
 
+// Passport
+require("./config/passport");
+
 // Routes
 app.use(require("./routes"));
 

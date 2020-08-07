@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { create, logIn } = require("../../controllers/users");
+const { create, logIn } = require("../../controllers/user");
 
 router.get("/test", (req, res) => {
   res.json({
@@ -8,9 +8,9 @@ router.get("/test", (req, res) => {
 });
 
 // Create user
-router.post("/users", create);
+router.post("/user", create);
 
 // Login user
-router.post("/users/login", logIn);
+router.post("/user/login", logIn);
 
 module.exports = router;
