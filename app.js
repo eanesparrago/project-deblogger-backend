@@ -10,26 +10,12 @@ const app = express();
 
 const isProduction = process.env.NODE_ENV === "production";
 
-// DB
-mongoose
-  .connect(process.env.DATABASE_LOCAL, {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useFindAndModify: false,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    console.log("DB connected");
-  });
-
 // Middlewares
 app.use(morgan("dev"));
-
 app.use(bodyParser.urlencoded({ extended: false }));
-
 app.use(
   session({
-    secret: "conduit",
+    secret: "deblogger",
     cookie: { maxAge: 60000 },
     resave: false,
     saveUninitialized: false,
@@ -41,7 +27,27 @@ if (process.env.NODE_ENV === "development") {
   app.use(cors({ origin: process.env.CLIENT_URL }));
 }
 
-/// Catch 404 and forward to error handler
+// DB
+if (isProduction) {
+  mongoose.connect(process.env.MONGODB_URI);
+} else {
+  mongoose
+    .connect(process.env.DATABASE_LOCAL, {
+      useNewUrlParser: true,
+      useCreateIndex: true,
+      useFindAndModify: false,
+      useUnifiedTopology: true,
+    })
+    .then(() => {
+      console.log("DB connected");
+    });
+  mongoose.set("debug", true);
+}
+
+// Models
+require("./models/User");
+
+// Catch 404 and forward to error handler
 app.use(function (req, res, next) {
   const err = new Error("Not Found");
   err.status = 404;
