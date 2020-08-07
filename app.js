@@ -12,7 +12,10 @@ const isProduction = process.env.NODE_ENV === "production";
 
 // Middlewares
 app.use(morgan("dev"));
+
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
 app.use(
   session({
     secret: "deblogger",
@@ -46,6 +49,9 @@ if (isProduction) {
 
 // Models
 require("./models/User");
+
+// Routes
+app.use(require("./routes"));
 
 // Catch 404 and forward to error handler
 app.use(function (req, res, next) {
