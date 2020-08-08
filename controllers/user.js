@@ -100,4 +100,19 @@ exports.update = (req, res, next) => {
     .catch(next);
 };
 
+exports.getPhotoByUsername = (req, res, next) => {
+  const username = req.params.username;
+  
+  User.findOne({ username })
+    .then((user) => {
+      if (!user) {
+        return res.sendStatus(401);
+      }
 
+      if (user.photo.data) {
+        res.set("Content-Type", user.photo.contentType);
+        return res.send(user.photo.data);
+      }
+    })
+    .catch(next);
+};
