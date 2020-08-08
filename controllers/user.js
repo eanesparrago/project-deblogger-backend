@@ -100,9 +100,10 @@ exports.update = (req, res, next) => {
     .catch(next);
 };
 
+// get /user/photo/:username
 exports.getPhotoByUsername = (req, res, next) => {
   const username = req.params.username;
-  
+
   User.findOne({ username })
     .then((user) => {
       if (!user) {
@@ -113,6 +114,25 @@ exports.getPhotoByUsername = (req, res, next) => {
         res.set("Content-Type", user.photo.contentType);
         return res.send(user.photo.data);
       }
+    })
+    .catch(next);
+};
+
+// get /user/:username
+exports.getPublicProfile = (req, res, next) => {
+  const username = req.params.username;
+  let user;
+  let blogs;
+
+  User.findOne({ username })
+    .then((user) => {
+      if (!user) {
+        return res.sendStatus(401);
+      }
+
+      // TODO: Blog data
+
+      return res.json(user.getPublicProfile());
     })
     .catch(next);
 };

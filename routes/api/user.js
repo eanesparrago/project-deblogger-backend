@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { create, logIn, read, update, getPhotoByUsername } = require("../../controllers/user");
+const { create, logIn, read, update, getPhotoByUsername, getPublicProfile } = require("../../controllers/user");
 const auth = require("../auth");
 
 router.get("/test", (req, res) => {
@@ -22,5 +22,8 @@ router.put("/user", auth.required, update)
 
 // Get photo by username
 router.get("/user/photo/:username", getPhotoByUsername)
+
+// Read public profile
+router.get("/user/:username", getPublicProfile)
 
 module.exports = router;

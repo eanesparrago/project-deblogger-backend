@@ -29,8 +29,12 @@ const UserSchema = new mongoose.Schema(
       type: String,
       trim: true,
       max: 32,
+      default: "",
     },
-    bio: String,
+    bio: {
+      type: String,
+      default: "",
+    },
     photo: {
       data: Buffer,
       contentType: String,
@@ -87,6 +91,17 @@ UserSchema.methods.toAuthJson = function () {
     email: this.email,
     token: this.generateJwt(),
     bio: this.bio,
+    role: this.role,
+  };
+};
+
+UserSchema.methods.getPublicProfile = function () {
+  return {
+    username: this.username,
+    email: this.email,
+    name: this.name,
+    bio: this.bio,
+    role: this.role,
   };
 };
 
