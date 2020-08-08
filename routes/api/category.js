@@ -6,8 +6,9 @@ const { validateCreateCategory } = require("../../validators/category");
 
 const { adminMiddleware } = require("../../controllers/auth");
 const auth = require("../auth");
-const { create } = require("../../controllers/category");
+const { create, read } = require("../../controllers/category");
 
+// Create category
 router.post(
   "/",
   auth.required,
@@ -16,5 +17,7 @@ router.post(
   runValidation,
   create
 );
+
+router.get("/:slug", read);
 
 module.exports = router;

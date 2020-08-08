@@ -58,7 +58,7 @@ exports.create = (req, res, next) => {
 
     // Categories and tags
     const arrayOfCategories = categories && categories.split(",");
-    const arrayOfTags = tags && tags.split(",");
+    // const arrayOfTags = tags && tags.split(",");
 
     if (files.photo) {
       if (files.photo.size > 10000000) {
@@ -78,37 +78,38 @@ exports.create = (req, res, next) => {
         });
       }
 
-      res.json(savedBlog);
+      Blog.findByIdAndUpdate(
+        savedBlog._id,
+        {
+          $push: { categories: arrayOfCategories },
+        },
+        { new: true }
+      ).exec((err, savedBlog) => {
+        if (err) {
+          return res.status(400).json({
+            error: dbErrorHandler(err),
+          });
+        } else {
+          res.json(savedBlog);
 
-      // Blog.findByIdAndUpdate(
-      //   savedBlog._id,
-      //   {
-      //     $push: { categories: arrayOfCategories },
-      //   },
-      //   { new: true }
-      // ).exec((err, savedBlog) => {
-      //   if (err) {
-      //     return res.status(400).json({
-      //       error: dbErrorHandler(err),
-      //     });
-      //   } else {
-      //     Blog.findByIdAndUpdate(
-      //       savedBlog._id,
-      //       {
-      //         $push: { tags: arrayOfTags },
-      //       },
-      //       { new: true }
-      //     ).exec((err, savedBlog) => {
-      //       if (err) {
-      //         return res.status(400).json({
-      //           error: dbErrorHandler(err),
-      //         });
-      //       } else {
-      //         res.json(savedBlog);
-      //       }
-      //     });
-      //   }
-      // });
+          // TODO: Tags
+          // Blog.findByIdAndUpdate(
+          //   savedBlog._id,
+          //   {
+          //     $push: { tags: arrayOfTags },
+          //   },
+          //   { new: true }
+          // ).exec((err, savedBlog) => {
+          //   if (err) {
+          //     return res.status(400).json({
+          //       error: getErrorMessage(err),
+          //     });
+          //   } else {
+          //     res.json(savedBlog);
+          //   }
+          // });
+        }
+      });
     });
   });
 };
