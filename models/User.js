@@ -31,7 +31,7 @@ const UserSchema = new mongoose.Schema(
       max: 32,
     },
     bio: String,
-    image: {
+    photo: {
       data: Buffer,
       contentType: String,
     },

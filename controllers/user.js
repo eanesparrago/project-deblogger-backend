@@ -80,16 +80,16 @@ exports.update = (req, res, next) => {
           user.setPassword(fields.password);
         }
 
-        if (files.image) {
-          if (files.image.size > 10000000) {
+        if (files.photo) {
+          if (files.photo.size > 10000000) {
             // 1mb maximum
             return res.status(422).json({
-              error: "Image should be less than 1mb",
+              error: "Image size should be less than 1mb",
             });
           }
 
-          user.image.data = fs.readFileSync(files.image.path);
-          user.image.contentType = files.image.type;
+          user.photo.data = fs.readFileSync(files.photo.path);
+          user.photo.contentType = files.photo.type;
         }
 
         return user.save().then(() => {
@@ -99,3 +99,5 @@ exports.update = (req, res, next) => {
     })
     .catch(next);
 };
+
+
