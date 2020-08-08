@@ -6,7 +6,7 @@ const { validateCreateCategory } = require("../../validators/category");
 
 const { adminMiddleware } = require("../../controllers/auth");
 const auth = require("../auth");
-const { create, read } = require("../../controllers/category");
+const { create, list, read } = require("../../controllers/category");
 
 // Create category
 router.post(
@@ -17,6 +17,8 @@ router.post(
   runValidation,
   create
 );
+
+router.get("/all", list);
 
 router.get("/:slug", read);
 
