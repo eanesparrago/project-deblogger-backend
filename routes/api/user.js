@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { create, logIn, read } = require("../../controllers/user");
+const { create, logIn, read, update } = require("../../controllers/user");
 const auth = require("../auth");
 
 router.get("/test", (req, res) => {
@@ -16,5 +16,8 @@ router.post("/user/login", logIn);
 
 // Read own profile
 router.get("/user/profile", auth.required, read);
+
+// Update user
+router.put("/user", auth.required, update)
 
 module.exports = router;
