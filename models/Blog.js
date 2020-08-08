@@ -25,10 +25,10 @@ const BlogSchema = new mongoose.Schema(
       type: String,
       max: 1000,
     },
-    mtitle: {
+    metaTitle: {
       type: String,
     },
-    mdesc: {
+    metaDescription: {
       type: String,
     },
     photo: {
