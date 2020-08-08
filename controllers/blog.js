@@ -4,34 +4,45 @@ const smartTrim = require("../utils/smartTrim");
 const slugify = require("slugify");
 const stripHtml = require("string-strip-html");
 const dbErrorHandler = require("../utils/dbErrorHandler");
-const _ = require("lodash");
 
 exports.create = (req, res, next) => {
-  const errors = {};
+  const errors = [];
 
   let form = new Formidable.IncomingForm();
   form.keepExtensions = true;
   form.parse(req, (err, fields, files) => {
     if (err) {
-      errors.photo = "Photo could not upload";
+      errors.push({
+        param: "photo",
+        msg: "Photo could not upload",
+      });
     }
 
     const { title, body, categories, tags } = fields;
 
     if (!title || !title.length) {
-      errors.title = "Title is required";
+      errors.push({
+        param: "title",
+        msg: "Title is required",
+      });
     }
 
     if (!body || body.length < 200) {
-      errors.body = "Content is too short (200 minimum characters)";
+      errors.push({
+        param: "body",
+        msg: "Content is too short (200 minimum characters)",
+      });
     }
 
     if (!categories || categories.length === 0) {
-      errors.categories = "At least one category is required";
+      errors.push({
+        param: "categories",
+        msg: "At least one category is required",
+      });
     }
 
     // Return errors if present
-    if (!_.isEmpty(errors)) {
+    if (errors.length !== 0) {
       return res.status(400).json({ errors });
     }
 

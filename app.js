@@ -50,6 +50,7 @@ if (isProduction) {
 // Models
 require("./models/User");
 require("./models/Blog");
+require("./models/Category");
 
 // Passport
 require("./config/passport");

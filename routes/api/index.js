@@ -4,6 +4,7 @@ const router = require("express").Router();
 
 router.use("/", require("./user"));
 router.use("/blog", require("./blog"));
+router.use("/category", require("./category"));
 
 router.use((err, req, res, next) => {
   if (err.name === "ValidationError") {
