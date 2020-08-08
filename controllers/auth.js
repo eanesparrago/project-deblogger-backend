@@ -1,4 +1,4 @@
- const User = require("mongoose").model("User");
+const User = require("mongoose").model("User");
 
 exports.authMiddleware = (req, res, next) => {
   const authUserId = req.user._id;

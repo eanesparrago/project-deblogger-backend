@@ -14,7 +14,7 @@ router.post("/user", create);
 // Login user
 router.post("/user/login", logIn);
 
-// Read own profile
+// Read own user
 router.get("/user/profile", auth.required, read);
 
 // Update user
