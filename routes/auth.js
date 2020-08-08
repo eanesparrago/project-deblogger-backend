@@ -19,13 +19,15 @@ const auth = {
     secret: secret,
     userProperty: "payload",
     getToken: getTokenFromHeader,
+    algorithms: ["HS256"],
   }),
   optional: jwt({
     secret: secret,
     userProperty: "payload",
     credentialsRequired: false,
     getToken: getTokenFromHeader,
+    algorithms: ["HS256"],
   }),
 };
 
-modeule.exports = auth;
+module.exports = auth;
