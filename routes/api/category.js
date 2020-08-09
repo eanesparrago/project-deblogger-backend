@@ -6,7 +6,7 @@ const { validateCreateCategory } = require("../../validators/category");
 
 const { adminMiddleware } = require("../../controllers/auth");
 const auth = require("../auth");
-const { create, list, read } = require("../../controllers/category");
+const { create, list, read, remove } = require("../../controllers/category");
 
 // Create category
 router.post(
@@ -18,8 +18,13 @@ router.post(
   create
 );
 
-router.get("/all", list);
+// Get all categories
+router.get("/", list);
 
+// Get blogs in category
 router.get("/:slug", read);
+
+// Delete category
+router.delete("/:slug", auth.required, adminMiddleware, remove);
 
 module.exports = router;

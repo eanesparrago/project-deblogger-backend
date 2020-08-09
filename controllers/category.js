@@ -37,6 +37,7 @@ exports.list = (req, res) => {
   });
 };
 
+// /category/:slug
 exports.read = (req, res, next) => {
   const slug = req.params.slug.toLowerCase();
 
@@ -52,4 +53,21 @@ exports.read = (req, res, next) => {
         .catch(next);
     })
     .catch(next);
+};
+
+// delete /category/:slugs
+exports.remove = (req, res) => {
+  const slug = req.params.slug.toLowerCase();
+
+  Category.findOneAndRemove({ slug }).exec((err, data) => {
+    if (err) {
+      return res.status(400).json({
+        error: dbErrorHandler(err),
+      });
+    }
+
+    res.json({
+      message: "Category deleted successfully",
+    });
+  });
 };
