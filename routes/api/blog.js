@@ -43,4 +43,7 @@ router.post("/user", auth.required, create);
 // Delete blog
 router.delete("/user/:slug", auth.required, canUpdateDeleteBlog, remove);
 
+// Update blog
+router.put("/user/:slug", auth.required, canUpdateDeleteBlog, update);
+
 module.exports = router;
