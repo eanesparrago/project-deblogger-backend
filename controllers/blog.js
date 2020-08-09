@@ -91,25 +91,28 @@ exports.create = (req, res, next) => {
           });
         } else {
           res.json(savedBlog);
-
-          // TODO: Tags
-          // Blog.findByIdAndUpdate(
-          //   savedBlog._id,
-          //   {
-          //     $push: { tags: arrayOfTags },
-          //   },
-          //   { new: true }
-          // ).exec((err, savedBlog) => {
-          //   if (err) {
-          //     return res.status(400).json({
-          //       error: getErrorMessage(err),
-          //     });
-          //   } else {
-          //     res.json(savedBlog);
-          //   }
-          // });
         }
       });
     });
   });
+};
+
+exports.read = (req, res) => {
+  const slug = req.params.slug.toLowerCase();
+
+  Blog.findOne({ slug })
+    .populate("postedBy", "_id name username profile")
+    .populate("categories", "_id name slug")
+    .select(
+      "_id title slug body metaTitle metaDescription categories postedBy createdAt updatedAt"
+    )
+    .exec((err, data) => {
+      if (err) {
+        return res.json({
+          error: dbErrorHandler(err),
+        });
+      }
+
+      res.json(data);
+    });
 };

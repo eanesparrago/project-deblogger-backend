@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { create } = require("../../controllers/blog");
+const { create, read } = require("../../controllers/blog");
 const auth = require("../auth");
 
 // /api/blog
@@ -10,6 +10,10 @@ router.get("/test", (req, res) => {
   });
 });
 
+// Create blog
 router.post("/", auth.required, create);
+
+// Read blog
+router.get("/:slug", read)
 
 module.exports = router;
