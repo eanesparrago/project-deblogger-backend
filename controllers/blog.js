@@ -116,3 +116,19 @@ exports.read = (req, res) => {
       res.json(data);
     });
 };
+
+exports.remove = (req, res) => {
+  const slug = req.params.slug.toLowerCase();
+
+  Blog.findOneAndRemove({ slug }).exec((err, data) => {
+    if (err) {
+      return res.json({
+        error: dbErrorHandler(err),
+      });
+    }
+
+    res.json({
+      message: "Blog deleted successfully",
+    });
+  });
+};
