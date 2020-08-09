@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { list, listAllBlogsCategories } = require("../../controllers/blogs");
+const { list, listAllBlogsCategories, listRelated } = require("../../controllers/blogs");
 const auth = require("../auth");
 const { adminMiddleware } = require("../../controllers/auth");
 
@@ -10,5 +10,8 @@ router.get("/", list);
 
 // List all blogs, categories, tags
 router.post("/blogs-categories", listAllBlogsCategories);
+
+// List related blogs
+router.post("/related", listRelated)
 
 module.exports = router;
