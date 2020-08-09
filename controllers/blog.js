@@ -4,6 +4,8 @@ const smartTrim = require("../utils/smartTrim");
 const slugify = require("slugify");
 const stripHtml = require("string-strip-html");
 const dbErrorHandler = require("../utils/dbErrorHandler");
+const _ = require("lodash");
+const fs = require("fs");
 
 exports.create = (req, res, next) => {
   const errors = [];
@@ -131,4 +133,80 @@ exports.remove = (req, res) => {
       message: "Blog deleted successfully",
     });
   });
+};
+
+exports.update = (req, res) => {
+  const slug = req.params.slug.toLowerCase();
+
+  Blog.findOne({ slug }).exec((err, oldBlog) => {
+    if (err) {
+      return res.json({
+        error: dbErrorHandler(err),
+      });
+    }
+
+    let form = new Formidable.IncomingForm();
+    form.keepExtensions = true;
+
+    form.parse(req, (err, fields, files) => {
+      if (err) {
+        return res.status(400).json({
+          error: "Image could not upload",
+        });
+      }
+
+      let slugBeforeMerge = oldBlog.slug;
+      oldBlog = _.merge(oldBlog, fields);
+      oldBlog.slug = slugBeforeMerge;
+
+      const { body, categories } = fields;
+
+      if (body) {
+        oldBlog.excerpt = smartTrim(body, 320, " ", "...");
+        oldBlog.metaDescription = stripHtml(body.substring(0, 160));
+      }
+
+      if (categories) {
+        oldBlog.categories = categories.split(",");
+      }
+
+      if (files.photo) {
+        if (files.photo.size > 10000000) {
+          return res.status(400).json({
+            error: "Image size should be less than 1mb",
+          });
+        }
+
+        oldBlog.photo.data = fs.readFileSync(files.photo.path);
+        oldBlog.photo.contentType = files.photo.type;
+      }
+
+      oldBlog.save((err, savedBlog) => {
+        if (err) {
+          return res.status(400).json({
+            error: dbErrorHandler(err),
+          });
+        }
+
+        res.json(savedBlog);
+      });
+    });
+  });
+};
+
+exports.getPhoto = (req, res) => {
+  const slug = req.params.slug.toLowerCase();
+
+  Blog.findOne({ slug })
+    .select("photo")
+    .exec((err, blog) => {
+      if (err || !blog) {
+        return res.status(400).json({
+          error: dbErrorHandler(err),
+        });
+      }
+
+      res.set("Content-Type", blog.photo.contentType);
+      return res.send(blog.photo.data);
+    });
 };

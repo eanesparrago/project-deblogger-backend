@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { create, read, remove } = require("../../controllers/blog");
+const { create, read, remove, update, getPhoto } = require("../../controllers/blog");
 const auth = require("../auth");
 const { adminMiddleware } = require("../../controllers/auth");
 
@@ -19,5 +19,11 @@ router.get("/:slug", read);
 
 // Remove blog
 router.delete("/:slug", auth.required, adminMiddleware, remove);
+
+// Update blog
+router.put("/:slug", auth.required, adminMiddleware, update);
+
+// Get blog photo
+router.get("/photo/:slug", getPhoto);
 
 module.exports = router;
