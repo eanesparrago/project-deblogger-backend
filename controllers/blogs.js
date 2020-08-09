@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Blog = mongoose.model("Blog");
 const Category = mongoose.model("Category");
+const User = mongoose.model("User");
 const Formidable = require("formidable");
 const smartTrim = require("../utils/smartTrim");
 const slugify = require("slugify");
@@ -81,4 +82,52 @@ exports.listRelated = (req, res) => {
 
       res.json(blogs);
     });
+};
+
+exports.listSearch = (req, res) => {
+  const { search } = req.query;
+
+  Blog.find(
+    {
+      $or: [
+        { title: { $regex: search, $options: "i" } },
+        { body: { $regex: search, $options: "i" } },
+      ],
+    },
+    (err, blogs) => {
+      if (err) {
+        return res.status(400).json({
+          error: dbErrorHandler(err),
+        });
+      }
+
+      res.json(blogs);
+    }
+  ).select("-photo -body");
+};
+
+exports.listByUser = (req, res) => {
+  User.findOne({ username: req.params.username }).exec((err, user) => {
+    if (err) {
+      return res.status(400).json({
+        error: dbErrorHandler(err),
+      });
+    }
+
+    const userId = user._id;
+
+    Blog.find({ postedBy: userId })
+      .populate("categories", "_id name slug")
+      .populate("postedBy", "_id name username")
+      .select("_id title slug postedBy createdAt updatedAt")
+      .exec((err, blogs) => {
+        if (err) {
+          return res.status(400).json({
+            error: dbErrorHandler(err),
+          });
+        }
+
+        res.json(blogs);
+      });
+  });
 };

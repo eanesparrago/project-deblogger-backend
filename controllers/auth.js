@@ -1,4 +1,7 @@
-const User = require("mongoose").model("User");
+const mongoose = require("mongoose");
+const dbErrorHandler = require("../utils/dbErrorHandler");
+const User = mongoose.model("User");
+const Blog = mongoose.model("Blog");
 
 exports.authMiddleware = (req, res, next) => {
   const authUserId = req.user._id;
@@ -31,6 +34,29 @@ exports.adminMiddleware = (req, res, next) => {
     }
 
     req.profile = user;
+
+    next();
+  });
+};
+
+exports.canUpdateDeleteBlog = (req, res, next) => {
+  const slug = req.params.slug.toLowerCase();
+  
+  Blog.findOne({ slug }).exec((err, blog) => {
+    if (err) {
+      return res.status(400).json({
+        error: dbErrorHandler(err),
+      });
+    }
+
+    const isUserAuthorized =
+      blog.postedBy._id.toString() === req.payload.id.toString();
+
+    if (!isUserAuthorized) {
+      return res.status(400).json({
+        error: "You are not authorized",
+      });
+    }
 
     next();
   });

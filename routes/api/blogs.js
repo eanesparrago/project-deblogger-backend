@@ -1,5 +1,11 @@
 const router = require("express").Router();
-const { list, listAllBlogsCategories, listRelated } = require("../../controllers/blogs");
+const {
+  list,
+  listAllBlogsCategories,
+  listRelated,
+  listSearch,
+  listByUser
+} = require("../../controllers/blogs");
 const auth = require("../auth");
 const { adminMiddleware } = require("../../controllers/auth");
 
@@ -12,6 +18,14 @@ router.get("/", list);
 router.post("/blogs-categories", listAllBlogsCategories);
 
 // List related blogs
-router.post("/related", listRelated)
+router.post("/related", listRelated);
+
+// Search blogs
+router.post("/search", listSearch);
+
+// List by user
+router.get("/:username", listByUser)
+
+
 
 module.exports = router;
