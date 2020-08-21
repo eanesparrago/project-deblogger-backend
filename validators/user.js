@@ -10,9 +10,6 @@ exports.validateUserSignup = [
 
 exports.validateUserSignin = [
   check("user.email").isEmail().withMessage("Must be a valid email address"),
-  check("user.password")
-    .isLength({ min: 6 })
-    .withMessage("Password must be at least 6 characters long"),
 ];
 
 exports.validateForgotPassword = [

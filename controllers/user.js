@@ -64,6 +64,10 @@ exports.update = (req, res, next) => {
           });
         }
 
+        if (typeof fields.name !== "undefined") {
+          user.name = fields.name;
+        }
+
         if (typeof fields.username !== "undefined") {
           user.username = fields.username;
         }
