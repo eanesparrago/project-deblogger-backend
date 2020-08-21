@@ -6,6 +6,7 @@ const {
   update,
   getPhotoByUsername,
   getPublicProfile,
+  signOut
 } = require("../../controllers/user");
 const auth = require("../auth");
 const {
@@ -39,5 +40,8 @@ router.get("/user/photo/:username", getPhotoByUsername);
 
 // Read public profile
 router.get("/user/:username", getPublicProfile);
+
+// Sign out
+router.get("/sign-out", signOut);
 
 module.exports = router;

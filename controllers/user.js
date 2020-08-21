@@ -136,3 +136,11 @@ exports.getPublicProfile = (req, res, next) => {
     })
     .catch(next);
 };
+
+// get /sign-out
+exports.signOut = (req, res) => {
+  res.clearCookie("token");
+  res.json({
+    message: "Sign out success",
+  });
+};
